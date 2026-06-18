@@ -1,6 +1,6 @@
 import { auth } from '../firebase';
 
-const BASE = import.meta.env.VITE_API_URL || 'http://localhost:4000';
+const BASE = import.meta.env.VITE_API_URL || 'https://mini-hcm-lg6y.onrender.com';
 
 // Attaches the Firebase ID token to every request automatically.
 async function request(path, options = {}) {

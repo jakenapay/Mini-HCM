@@ -8,7 +8,10 @@ const adminRoutes = require('./routes/admin');
 
 const app = express();
 
-app.use(cors({ origin: process.env.FRONTEND_URL || 'http://localhost:5173' }));
+app.use(cors({ 
+    origin: process.env.FRONTEND_URL || 'https://mini-hcm-69b15.web.app',
+    credentials: true
+}));
 app.use(express.json());
 
 app.use('/api/attendance', attendanceRoutes);
