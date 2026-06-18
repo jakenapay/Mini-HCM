@@ -2,11 +2,6 @@ const { parseISO, differenceInMinutes, setHours, setMinutes, setSeconds, startOf
 const TIMEZONE = 'Asia/Manila';
 const { toZonedTime } = require('date-fns-tz');
 
-const {
-  startOfDay, setHours, setMinutes, setSeconds,
-  differenceInMinutes, addDays
-} = require('date-fns');
-
 /**
  * Computes all HCM metrics for a single punch pair.
  *
