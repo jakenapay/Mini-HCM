@@ -4,6 +4,23 @@ import { format, startOfWeek } from 'date-fns';
 
 // ── Punch edit modal ────────────────────────────────────────────────────────
 function EditModal({ punch, onClose, onSave }) {
+
+  function toLocalInput(utcString) {
+    if (!utcString) return '';
+    const date = new Date(utcString);
+    const PHT_OFFSET = 8 * 60;
+    const localDate = new Date(date.getTime() + PHT_OFFSET * 60 * 1000);
+    return localDate.toISOString().slice(0, 16); // "2026-06-18T09:00"
+  }
+
+  function toUTCIso(localString) {
+    if (!localString) return undefined;
+    const PHT_OFFSET = 8 * 60;
+    const localDate = new Date(localString);
+    const utcDate = new Date(localDate.getTime() - PHT_OFFSET * 60 * 1000);
+    return utcDate.toISOString();
+  }
+
   const [punchIn, setPunchIn] = useState(punch.punchIn?.slice(0, 16) || '');
   const [punchOut, setPunchOut] = useState(punch.punchOut?.slice(0, 16) || '');
   const [saving, setSaving] = useState(false);
@@ -108,7 +125,7 @@ export default function AdminPanel() {
   async function handleEditSave(id, data) {
     await api.editPunch(id, data);
     setMsg('Punch updated and metrics recomputed.');
-    loadPunches();
+    await loadPunches();
   }
 
   const employeeName = (uid) => employees.find(e => e.id === uid)?.name || uid;
