@@ -1,4 +1,12 @@
+import { toZonedTime } from 'date-fns-tz';
 const { parseISO, differenceInMinutes, setHours, setMinutes, setSeconds, startOfDay, addDays } = require('date-fns');
+const TIMEZONE = 'Asia/Manila';
+const { toZonedTime } = require('date-fns-tz');
+
+const {
+  startOfDay, setHours, setMinutes, setSeconds,
+  differenceInMinutes, addDays
+} = require('date-fns');
 
 /**
  * Computes all HCM metrics for a single punch pair.
@@ -9,8 +17,9 @@ const { parseISO, differenceInMinutes, setHours, setMinutes, setSeconds, startOf
  * @returns {{ regularHours, overtimeHours, nightDiffHours, lateMinutes, undertimeMinutes }}
  */
 function computeHours(punchIn, punchOut, schedule) {
-  const inTime = typeof punchIn === 'string' ? parseISO(punchIn) : new Date(punchIn);
-  const outTime = typeof punchOut === 'string' ? parseISO(punchOut) : new Date(punchOut);
+  // Convert UTC timestamps to PHT before any computation
+  const inTime  = toZonedTime(new Date(punchIn),  TIMEZONE);
+  const outTime = toZonedTime(new Date(punchOut), TIMEZONE);
 
   const [schedStartH, schedStartM] = schedule.start.split(':').map(Number);
   const [schedEndH, schedEndM] = schedule.end.split(':').map(Number);

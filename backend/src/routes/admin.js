@@ -4,6 +4,9 @@ const { db } = require('../firebase');
 const { requireAuth, requireAdmin } = require('../middleware/auth');
 const { computeHours } = require('../services/computeHours');
 
+const { toZonedTime } = require('date-fns-tz');
+const TIMEZONE = 'Asia/Manila';       
+
 // All admin routes require authentication AND admin role
 router.use(requireAuth, requireAdmin);
 

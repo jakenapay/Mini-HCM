@@ -4,6 +4,9 @@ const { db } = require('../firebase');
 const { requireAuth } = require('../middleware/auth');
 const { computeHours } = require('../services/computeHours');
 const { format } = require('date-fns');
+const { toZonedTime }  = require('date-fns-tz');
+
+const TIMEZONE = 'Asia/Manila';
 
 // GET /api/attendance/status - Is the user currently punched in?
 router.get('/status', requireAuth, async (req, res) => {
@@ -38,12 +41,13 @@ router.post('/punch-in', requireAuth, async (req, res) => {
       return res.status(400).json({ error: 'Already punched in. Please punch out first.' });
     }
 
-    const now = new Date().toISOString();
+    const nowUtc = new Date();
+    const nowPHT = toZonedTime(nowUtc, TIMEZONE);
     const docRef = await db.collection('attendance').add({
       userId: req.user.uid,
-      punchIn: now,
+      punchIn: nowUtc.toISOString(),
       punchOut: null,
-      date: format(new Date(), 'yyyy-MM-dd'),
+      date: format(nowPHT, 'yyyy-MM-dd'),
     });
 
     res.json({ id: docRef.id, punchIn: now });
